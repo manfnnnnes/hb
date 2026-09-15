@@ -111,7 +111,7 @@ export default function MainContent() {
               viewport={{ once: true, margin: "-60px" }}
               transition={{ duration: 0.6, delay: i * 0.1, ease: "easeOut" }}
             >
-              <PhotoFrame caption={photo.caption} />
+              <PhotoFrame caption={photo.caption} src={photo.src} />
             </motion.div>
           ))}
         </div>
