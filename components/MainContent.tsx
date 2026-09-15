@@ -17,6 +17,16 @@ const fadeUp = {
 function LastSecret() {
   const [open, setOpen] = useState(false);
 
+  function openSignal() {
+    // Пытаемся открыть приложение Signal
+    window.location.href = "sgnl://";
+    
+    // На случай если не установлено — через секунду можно показать подсказку
+    setTimeout(() => {
+      // ничего не делаем, просто оставляем
+    }, 800);
+  }
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -34,16 +44,23 @@ function LastSecret() {
         </button>
       ) : (
         <motion.div
-          initial={{ opacity: 0, scale: 0.97 }}
+          initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           className="rounded-3xl border border-rose/30 bg-mauve/50 p-6 text-left backdrop-blur-sm"
         >
           <p className="mb-3 text-sm uppercase tracking-widest text-rose/80">
             {siteContent.final.lastSecret.title}
           </p>
-          <p className="font-serif text-base leading-relaxed text-cream/90">
+          <p className="mb-5 font-serif text-base leading-relaxed text-cream/90">
             {siteContent.final.lastSecret.text}
           </p>
+
+          <button
+            onClick={openSignal}
+            className="inline-flex items-center gap-2 rounded-full border border-rose/40 bg-rose/15 px-5 py-2.5 text-sm text-rose transition hover:bg-rose/25"
+          >
+            Написать Дене в Signal 💌
+          </button>
         </motion.div>
       )}
     </motion.div>
