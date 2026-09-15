@@ -9,16 +9,15 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // чуть светлее и теплее
-        ink: "#26181f",
-        plum: "#3a2832",
-        mauve: "#4a3542",
-        mauvelight: "#5e4654",
-        rose: "#e8b9b4",
-        blush: "#f2cdc7",
-        champagne: "#dbb48a",
-        champagnelight: "#efd6b2",
-        cream: "#f8f0e8",
+        ink: "#1c1116",
+        plum: "#2c1e26",
+        mauve: "#3d2833",
+        mauvelight: "#523646",
+        rose: "#e6b3ae",
+        blush: "#f0c9c2",
+        champagne: "#d7ae82",
+        champagnelight: "#ecd3ab",
+        cream: "#f6ece3",
       },
       fontFamily: {
         serif: ["var(--font-display)", "Georgia", "serif"],
@@ -39,7 +38,7 @@ const config: Config = {
         glow: "glow 4s ease-in-out infinite",
       },
       boxShadow: {
-        soft: "0 20px 60px -20px rgba(0,0,0,0.45)",
+        soft: "0 20px 60px -20px rgba(0,0,0,0.55)",
       },
     },
   },
