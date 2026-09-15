@@ -1,0 +1,51 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: #2e1f28;
+  color: #f8f0e8;
+  overflow-x: hidden;
+}
+
+::selection {
+  background-color: #dbb48a;
+  color: #26181f;
+}
+
+/* тонкий скроллбар в тон сайта */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #2e1f28;
+}
+::-webkit-scrollbar-thumb {
+  background-color: #6b4a58;
+  border-radius: 999px;
+  border: 2px solid #2e1f28;
+}
+
+/* видимый фокус для доступности с клавиатуры */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible {
+  outline: 2px solid #dbb48a;
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
