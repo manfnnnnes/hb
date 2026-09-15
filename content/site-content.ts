@@ -120,7 +120,7 @@ export const siteContent = {
     items: [
       { caption: "Наше фото" },
       { caption: "Наше фото" },
-    ],
+    ] as { caption: string; src?: string }[],
   },
 
   final: {
