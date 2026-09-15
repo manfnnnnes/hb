@@ -18,17 +18,17 @@ function generatePetals(count: number): Petal[] {
   return Array.from({ length: count }).map((_, i) => ({
     id: i,
     left: Math.random() * 100,
-    size: 9 + Math.random() * 13,
-    duration: 16 + Math.random() * 14,
-    delay: Math.random() * 14,
-    drift: 30 + Math.random() * 55,
-    opacity: 0.22 + Math.random() * 0.32,
-    hue: Math.random() > 0.45 ? "rose" : "champagne",
+    size: 10 + Math.random() * 14,
+    duration: 14 + Math.random() * 12,
+    delay: Math.random() * 12,
+    drift: 40 + Math.random() * 60,
+    opacity: 0.25 + Math.random() * 0.35,
+    hue: Math.random() > 0.5 ? "rose" : "champagne",
   }));
 }
 
 function PetalShape({ hue }: { hue: Petal["hue"] }) {
-  const fill = hue === "rose" ? "#e8b9b4" : "#dbb48a";
+  const fill = hue === "rose" ? "#e6b3ae" : "#d7ae82";
   return (
     <svg viewBox="0 0 24 24" width="100%" height="100%">
       <path
@@ -47,7 +47,7 @@ export default function FallingPetals({
   const [petals, setPetals] = useState<Petal[]>([]);
 
   useEffect(() => {
-    setPetals(generatePetals(density === "full" ? 18 : 8));
+    setPetals(generatePetals(density === "full" ? 20 : 9));
   }, [density]);
 
   return (
@@ -67,9 +67,9 @@ export default function FallingPetals({
             opacity: p.opacity,
           }}
           animate={{
-            top: "110%",
-            x: [0, p.drift, -p.drift * 0.55, 0],
-            rotate: [0, 140, 290, 420],
+            top: "108%",
+            x: [0, p.drift, -p.drift * 0.6, 0],
+            rotate: [0, 160, 320, 480],
           }}
           transition={{
             duration: p.duration,

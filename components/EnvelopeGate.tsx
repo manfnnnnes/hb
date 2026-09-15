@@ -12,10 +12,9 @@ export default function EnvelopeGate({ onUnlock }: { onUnlock: () => void }) {
 
   useEffect(() => {
     if (stage !== "opening") return;
-    // чуть длиннее, чтобы анимация успела раскрыться красиво
     const timer = setTimeout(() => {
       onUnlock();
-    }, 2800);
+    }, 1900);
     return () => clearTimeout(timer);
   }, [stage, onUnlock]);
 
@@ -23,9 +22,9 @@ export default function EnvelopeGate({ onUnlock }: { onUnlock: () => void }) {
     <div className="relative z-10 flex min-h-screen flex-col items-center justify-center px-6 py-16">
       <motion.p
         initial={{ opacity: 0, y: -8 }}
-        animate={{ opacity: 0.8, y: 0 }}
-        transition={{ duration: 0.9 }}
-        className="mb-7 text-sm uppercase tracking-[0.28em] text-champagne/85"
+        animate={{ opacity: 0.75, y: 0 }}
+        transition={{ duration: 0.8 }}
+        className="mb-6 text-sm uppercase tracking-[0.25em] text-champagne/80"
       >
         {siteContent.envelope.eyebrow}
       </motion.p>

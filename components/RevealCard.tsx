@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 
 export default function RevealCard({
   title,
@@ -30,21 +30,17 @@ export default function RevealCard({
         </motion.span>
       </div>
 
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.38, ease: "easeOut" }}
-            className="overflow-hidden"
-          >
-            <p className="mt-4 text-sm leading-relaxed text-cream/78 sm:text-base">
-              {text}
-            </p>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {open && (
+        <motion.p
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: "auto" }}
+          exit={{ opacity: 0, height: 0 }}
+          transition={{ duration: 0.35, ease: "easeOut" }}
+          className="mt-4 text-sm leading-relaxed text-cream/75 sm:text-base"
+        >
+          {text}
+        </motion.p>
+      )}
     </motion.button>
   );
 }

@@ -17,19 +17,10 @@ export default function MainContent() {
     <div className="relative z-10">
       {/* герой */}
       <section className="flex min-h-screen flex-col items-center justify-center px-6 text-center">
-        <motion.p
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 0.7, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="mb-5 text-xs uppercase tracking-[0.32em] text-champagne/80"
-        >
-          Для самой любимой
-        </motion.p>
-
         <motion.h1
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.95, ease: "easeOut" }}
+          transition={{ duration: 0.9, ease: "easeOut" }}
           className="font-serif text-4xl leading-tight text-cream sm:text-6xl"
         >
           {siteContent.hero.title}
@@ -45,8 +36,8 @@ export default function MainContent() {
 
         <motion.div
           initial={{ opacity: 0 }}
-          animate={{ opacity: 0.55 }}
-          transition={{ duration: 1.2, delay: 1.1 }}
+          animate={{ opacity: 0.6 }}
+          transition={{ duration: 1.2, delay: 1 }}
           className="mt-16 flex flex-col items-center gap-2 text-cream/50"
         >
           <span className="text-xs uppercase tracking-[0.3em]">Листай вниз</span>
@@ -64,13 +55,13 @@ export default function MainContent() {
           <h2 className="mb-8 text-center font-serif text-2xl text-champagnelight sm:text-3xl">
             {siteContent.letter.heading}
           </h2>
-          <div className="rounded-3xl border border-champagne/15 bg-mauve/35 p-8 backdrop-blur-sm sm:p-12">
-            <div className="space-y-5 font-serif text-base leading-relaxed text-cream/92 sm:text-lg">
+          <div className="rounded-3xl border border-champagne/15 bg-mauve/30 p-8 backdrop-blur-sm sm:p-12">
+            <div className="space-y-5 font-serif text-base leading-relaxed text-cream/90 sm:text-lg">
               {siteContent.letter.paragraphs.map((p, i) => (
                 <p key={i}>{p}</p>
               ))}
             </div>
-            <p className="mt-9 text-right font-serif italic text-champagne">
+            <p className="mt-8 text-right font-serif italic text-champagne">
               {siteContent.letter.signature}
             </p>
           </div>
@@ -79,15 +70,12 @@ export default function MainContent() {
 
       {/* карточки */}
       <section className="mx-auto max-w-3xl px-6 py-16">
-        <motion.div {...fadeUp} className="mb-10 text-center">
-          <h2 className="font-serif text-2xl text-champagnelight sm:text-3xl">
-            {siteContent.cardsHeading}
-          </h2>
-          <p className="mt-2 text-sm italic text-cream/55">
-            {siteContent.cardsSubtitle}
-          </p>
-        </motion.div>
-
+        <motion.h2
+          {...fadeUp}
+          className="mb-10 text-center font-serif text-2xl text-champagnelight sm:text-3xl"
+        >
+          {siteContent.cardsHeading}
+        </motion.h2>
         <div className="grid gap-4 sm:grid-cols-2">
           {siteContent.cards.map((card, i) => (
             <motion.div
@@ -95,13 +83,8 @@ export default function MainContent() {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-60px" }}
-              transition={{ duration: 0.6, delay: (i % 2) * 0.08, ease: "easeOut" }}
-              className={
-                siteContent.cards.length % 2 !== 0 &&
-                i === siteContent.cards.length - 1
-                  ? "sm:col-span-2"
-                  : ""
-              }
+              transition={{ duration: 0.6, delay: (i % 2) * 0.1, ease: "easeOut" }}
+              className={siteContent.cards.length % 2 !== 0 && i === siteContent.cards.length - 1 ? "sm:col-span-2" : ""}
             >
               <RevealCard title={card.title} text={card.text} />
             </motion.div>
