@@ -23,7 +23,6 @@ export default function PetalCatcher() {
   const timeoutsRef = useRef<NodeJS.Timeout[]>([]);
   const loadedRef = useRef(false);
 
-  // Загружаем сохранённый счётчик
   useEffect(() => {
     try {
       const saved = window.localStorage.getItem(STORAGE_KEY);
@@ -35,7 +34,6 @@ export default function PetalCatcher() {
     loadedRef.current = true;
   }, []);
 
-  // Сохраняем при каждом изменении
   useEffect(() => {
     if (!loadedRef.current) return;
     try {
@@ -44,9 +42,11 @@ export default function PetalCatcher() {
   }, [caught]);
 
   useEffect(() => {
+    const heartChance = caught >= 50 ? 0.38 : 0.18; // после 50 — чаще сердечки
+
     function spawn() {
       idRef.current += 1;
-      const isHeart = Math.random() < 0.18; // ~18% сердечек
+      const isHeart = Math.random() < heartChance;
       const petal: CatchPetal = {
         id: idRef.current,
         left: 8 + Math.random() * 84,
@@ -62,14 +62,14 @@ export default function PetalCatcher() {
     }
 
     spawn();
-    const interval = setInterval(spawn, 1400);
+    const interval = setInterval(spawn, caught >= 50 ? 1100 : 1400);
     const timeouts = timeoutsRef.current;
 
     return () => {
       clearInterval(interval);
       timeouts.forEach(clearTimeout);
     };
-  }, []);
+  }, [caught >= 50]); // перезапускаем при достижении 50
 
   function handleCatch(id: number, isHeart: boolean) {
     setPetals((prev) => prev.filter((p) => p.id !== id));
@@ -77,8 +77,6 @@ export default function PetalCatcher() {
     setCaught((c) => {
       const next = c + 1;
 
-      // Каждые 5 обычных — милая фраза
-      // Сердечко — сразу горячая фраза
       if (isHeart) {
         const rewards = siteContent.comingSoon.heartRewards;
         setReward(rewards[Math.floor(Math.random() * rewards.length)]);
@@ -89,10 +87,17 @@ export default function PetalCatcher() {
         setIsSpicy(false);
       }
 
-      // Каждые 25 — особая фраза
-      if (next % 25 === 0) {
+      // Специальная фраза на 50
+      if (next === 50) {
         setTimeout(() => {
-          setReward(`Уровень ${next / 25}! Ты уже настоящая охотница за лепестками`);
+          setReward("Я тебя хочу");
+          setIsSpicy(true);
+        }, 2900);
+      }
+
+      if (next % 25 === 0 && next !== 50) {
+        setTimeout(() => {
+          setReward(`Уровень ${next / 25}! Ты уже настоящая охотница`);
           setIsSpicy(false);
         }, 2800);
       }
@@ -106,7 +111,7 @@ export default function PetalCatcher() {
     const t = setTimeout(() => {
       setReward(null);
       setIsSpicy(false);
-    }, 2800);
+    }, 3000);
     return () => clearTimeout(t);
   }, [reward]);
 
@@ -128,7 +133,7 @@ export default function PetalCatcher() {
               transition={{ duration: p.duration, ease: "linear" }}
             >
               {p.isHeart ? (
-                <svg viewBox="0 0 24 24" width="100%" height="100%">
+                <svg viewBox="0 0 24 24" width="100%" height="100%" className="drop-shadow-[0_0_8px_rgba(230,179,174,0.7)]">
                   <path
                     d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
                     fill="#e6b3ae"
