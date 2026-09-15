@@ -6,13 +6,8 @@ import EnvelopeGate from "@/components/EnvelopeGate";
 import MainContent from "@/components/MainContent";
 import ComingSoon from "@/components/ComingSoon";
 
-// Дата, когда сайт открывается для всех.
 const REVEAL_DATE = new Date("2026-11-13T00:00:00");
-
-// Секретный способ заглянуть раньше: ?preview=true
 const PREVIEW_PARAM = "preview";
-
-// Ключ в localStorage
 const STORAGE_KEY = "hb_unlocked";
 
 export default function Home() {
@@ -28,14 +23,13 @@ export default function Home() {
     try {
       const remembered = window.localStorage.getItem(STORAGE_KEY) === "true";
       if (remembered) setUnlocked(true);
-    } catch {
-      // localStorage может быть недоступен
-    }
+    } catch {}
 
-    setReady(true);
+    // Небольшая задержка для красивой загрузки
+    const t = setTimeout(() => setReady(true), 600);
+    return () => clearTimeout(t);
   }, []);
 
-  // Меняем название вкладки
   useEffect(() => {
     if (!ready) return;
 
@@ -51,10 +45,21 @@ export default function Home() {
   function handleUnlock() {
     try {
       window.localStorage.setItem(STORAGE_KEY, "true");
-    } catch {
-      // если localStorage недоступен
-    }
+    } catch {}
     setUnlocked(true);
+  }
+
+  // Красивый скелетон загрузки
+  if (!ready) {
+    return (
+      <main className="relative flex min-h-screen items-center justify-center bg-gradient-to-b from-plum via-mauve to-ink">
+        <div className="flex flex-col items-center gap-6">
+          <div className="h-16 w-16 animate-pulse rounded-full border border-champagne/30 bg-mauve/40" />
+          <div className="h-3 w-40 animate-pulse rounded-full bg-cream/10" />
+          <div className="h-3 w-28 animate-pulse rounded-full bg-cream/10" />
+        </div>
+      </main>
+    );
   }
 
   return (
@@ -70,7 +75,7 @@ export default function Home() {
 
       <FallingPetals density={unlocked ? "calm" : "full"} />
 
-      {!ready ? null : !dateReached ? (
+      {!dateReached ? (
         <ComingSoon target={REVEAL_DATE} />
       ) : !unlocked ? (
         <EnvelopeGate onUnlock={handleUnlock} />
