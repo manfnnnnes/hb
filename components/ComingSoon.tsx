@@ -283,13 +283,19 @@ export default function ComingSoon({ target }: { target: Date }) {
             animate={{ opacity: 1, y: 0 }}
             className="flex flex-col gap-3"
           >
-            {noteSent ? (
-              <p className="rounded-2xl border border-champagne/20 bg-mauve/40 px-4 py-3 text-sm italic text-cream/80">
-                Деня уже читает… ❤️
-                <br />
-                <span className="mt-1 block text-xs text-cream/50">«{note}»</span>
-              </p>
-            ) : (
+           {noteSent ? (
+  <div className="rounded-2xl border border-champagne/20 bg-mauve/40 px-4 py-3 text-sm text-cream/80">
+    <p className="italic">
+      Деня пока ещё не научился читать сообщения прямо здесь 😅
+    </p>
+    <p className="mt-2 text-xs text-cream/60">
+      Поэтому напиши ему лично — он будет очень ждать.
+    </p>
+    <p className="mt-3 text-xs italic text-cream/40">
+      Твоё сообщение: «{note}»
+    </p>
+  </div>
+) : (
               <>
                 <textarea
                   value={note}
