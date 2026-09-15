@@ -7,15 +7,12 @@ import MainContent from "@/components/MainContent";
 import ComingSoon from "@/components/ComingSoon";
 
 // Дата, когда сайт открывается для всех.
-// Чтобы поменять дату, отредактируй строку ниже (год-месяц-день).
 const REVEAL_DATE = new Date("2026-11-13T00:00:00");
 
-// Секретный способ заглянуть на сайт раньше срока, чтобы всё проверить самому:
-// открой сайт со ссылкой вида https://твой-сайт.vercel.app/?preview=true
+// Секретный способ заглянуть раньше: ?preview=true
 const PREVIEW_PARAM = "preview";
 
-// Ключ в localStorage, по которому запоминается что письмо уже открыто,
-// чтобы при повторном заходе не нужно было отвечать на вопросы заново.
+// Ключ в localStorage
 const STORAGE_KEY = "hb_unlocked";
 
 export default function Home() {
@@ -32,18 +29,30 @@ export default function Home() {
       const remembered = window.localStorage.getItem(STORAGE_KEY) === "true";
       if (remembered) setUnlocked(true);
     } catch {
-      // localStorage может быть недоступен в редких случаях
-      // (приватный режим с ограничениями), тогда просто не запоминаем
+      // localStorage может быть недоступен
     }
 
     setReady(true);
   }, []);
 
+  // Меняем название вкладки
+  useEffect(() => {
+    if (!ready) return;
+
+    if (!dateReached) {
+      document.title = "Секрет для Настюши";
+    } else if (!unlocked) {
+      document.title = "Письмо для тебя";
+    } else {
+      document.title = "С днём рождения, Настюша";
+    }
+  }, [ready, dateReached, unlocked]);
+
   function handleUnlock() {
     try {
       window.localStorage.setItem(STORAGE_KEY, "true");
     } catch {
-      // если localStorage недоступен, просто продолжаем без запоминания
+      // если localStorage недоступен
     }
     setUnlocked(true);
   }
