@@ -14,6 +14,42 @@ const fadeUp = {
   transition: { duration: 0.7, ease: "easeOut" as const },
 };
 
+function LastSecret() {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.7, delay: 0.3 }}
+      className="mt-16 w-full max-w-md"
+    >
+      {!open ? (
+        <button
+          onClick={() => setOpen(true)}
+          className="w-full rounded-full border border-rose/40 bg-rose/10 px-6 py-3 text-sm italic text-rose transition hover:bg-rose/20"
+        >
+          {siteContent.final.lastSecret.button} ✨
+        </button>
+      ) : (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.97 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="rounded-3xl border border-rose/30 bg-mauve/50 p-6 text-left backdrop-blur-sm"
+        >
+          <p className="mb-3 text-sm uppercase tracking-widest text-rose/80">
+            {siteContent.final.lastSecret.title}
+          </p>
+          <p className="font-serif text-base leading-relaxed text-cream/90">
+            {siteContent.final.lastSecret.text}
+          </p>
+        </motion.div>
+      )}
+    </motion.div>
+  );
+}
+
 export default function MainContent() {
   const [phrase, setPhrase] = useState("");
 
@@ -167,10 +203,12 @@ export default function MainContent() {
         <motion.button
           {...fadeUp}
           onClick={scrollToLetter}
-          className="mt-8 rounded-full border border-champagne/30 bg-mauve/40 px-6 py-2.5 text-xs uppercase tracking-widest text-champagne transition hover:border-champagne/60 hover:bg-mauve/60"
+          className="mt-6 rounded-full border border-champagne/30 bg-mauve/40 px-6 py-2.5 text-xs uppercase tracking-widest text-champagne transition hover:border-champagne/60 hover:bg-mauve/60"
         >
           Ещё раз прочитать письмо
         </motion.button>
+
+        <LastSecret />
       </section>
     </div>
   );
