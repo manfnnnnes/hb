@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { siteContent } from "@/content/site-content";
 import PetalCatcher from "./PetalCatcher";
@@ -26,15 +26,21 @@ function pad(n: number) {
   return String(n).padStart(2, "0");
 }
 
-// Дата начала отсчёта нужна только для полоски прогресса,
-// чтобы было видно сколько пути уже пройдено. Поменяй если нужно.
 const START_DATE = new Date("2026-09-15T00:00:00");
+const NOTE_KEY = "hb_love_note";
 
 export default function ComingSoon({ target }: { target: Date }) {
   const [time, setTime] = useState<TimeLeft>(() => getTimeLeft(target));
   const [hintIndex, setHintIndex] = useState(0);
   const [lockMessage, setLockMessage] = useState<string | null>(null);
   const [lockKey, setLockKey] = useState(0);
+  const [secretMessage, setSecretMessage] = useState<string | null>(null);
+  const [showNote, setShowNote] = useState(false);
+  const [note, setNote] = useState("");
+  const [noteSent, setNoteSent] = useState(false);
+
+  const titleClicks = useRef(0);
+  const timerClicks = useRef(0);
 
   useEffect(() => {
     const id = setInterval(() => setTime(getTimeLeft(target)), 1000);
@@ -48,11 +54,49 @@ export default function ComingSoon({ target }: { target: Date }) {
     return () => clearInterval(id);
   }, []);
 
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(NOTE_KEY);
+      if (saved) {
+        setNote(saved);
+        setNoteSent(true);
+      }
+    } catch {}
+  }, []);
+
   function handleLockClick() {
     const messages = siteContent.comingSoon.lockMessages;
     const next = messages[Math.floor(Math.random() * messages.length)];
     setLockMessage(next);
     setLockKey((k) => k + 1);
+  }
+
+  function handleTitleClick() {
+    titleClicks.current += 1;
+    checkSecret();
+  }
+
+  function handleTimerClick() {
+    timerClicks.current += 1;
+    checkSecret();
+  }
+
+  function checkSecret() {
+    if (titleClicks.current >= 3 && timerClicks.current >= 2) {
+      const msgs = siteContent.comingSoon.secretMessages;
+      setSecretMessage(msgs[Math.floor(Math.random() * msgs.length)]);
+      titleClicks.current = 0;
+      timerClicks.current = 0;
+      setTimeout(() => setSecretMessage(null), 4500);
+    }
+  }
+
+  function sendNote() {
+    if (!note.trim()) return;
+    try {
+      localStorage.setItem(NOTE_KEY, note.trim());
+      setNoteSent(true);
+    } catch {}
   }
 
   useEffect(() => {
@@ -108,20 +152,8 @@ export default function ComingSoon({ target }: { target: Date }) {
             }
           >
             <svg width="34" height="34" viewBox="0 0 34 34" fill="none">
-              <rect
-                x="7"
-                y="15"
-                width="20"
-                height="14"
-                rx="3"
-                stroke="#d7ae82"
-                strokeWidth="1.6"
-              />
-              <path
-                d="M11 15V10C11 6.68629 13.6863 4 17 4C20.3137 4 23 6.68629 23 10V15"
-                stroke="#d7ae82"
-                strokeWidth="1.6"
-              />
+              <rect x="7" y="15" width="20" height="14" rx="3" stroke="#d7ae82" strokeWidth="1.6" />
+              <path d="M11 15V10C11 6.68629 13.6863 4 17 4C20.3137 4 23 6.68629 23 10V15" stroke="#d7ae82" strokeWidth="1.6" />
               <circle cx="17" cy="21" r="2" fill="#e6b3ae" />
             </svg>
           </motion.div>
@@ -143,10 +175,11 @@ export default function ComingSoon({ target }: { target: Date }) {
       </div>
 
       <motion.h1
+        onClick={handleTitleClick}
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 0.3 }}
-        className="mb-4 mt-6 max-w-md font-serif text-3xl leading-snug text-cream sm:text-4xl"
+        className="mb-4 mt-6 max-w-md cursor-pointer select-none font-serif text-3xl leading-snug text-cream sm:text-4xl"
       >
         {siteContent.comingSoon.title}
       </motion.h1>
@@ -161,10 +194,11 @@ export default function ComingSoon({ target }: { target: Date }) {
       </motion.p>
 
       <motion.div
+        onClick={handleTimerClick}
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 0.6 }}
-        className="mb-8 flex gap-5 sm:gap-8"
+        className="mb-8 flex cursor-pointer select-none gap-5 sm:gap-8"
       >
         {units.map(([value, label]) => (
           <div key={label} className="flex flex-col items-center">
@@ -197,7 +231,7 @@ export default function ComingSoon({ target }: { target: Date }) {
         </p>
       </motion.div>
 
-      <div className="h-6 mb-8">
+      <div className="h-6 mb-6">
         <AnimatePresence mode="wait">
           <motion.p
             key={hintIndex}
@@ -212,7 +246,63 @@ export default function ComingSoon({ target }: { target: Date }) {
         </AnimatePresence>
       </div>
 
+      {/* Секретное сообщение */}
+      <AnimatePresence>
+        {secretMessage && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0 }}
+            className="mb-6 rounded-full border border-rose/50 bg-ink/95 px-6 py-2.5 text-sm italic text-rose shadow-soft"
+          >
+            {secretMessage}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <PetalCatcher />
+
+      {/* Кнопка Написать мне */}
+      <div className="mt-10 w-full max-w-sm">
+        {!showNote ? (
+          <button
+            onClick={() => setShowNote(true)}
+            className="text-xs uppercase tracking-widest text-cream/40 transition hover:text-champagne"
+          >
+            Написать мне
+          </button>
+        ) : (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex flex-col gap-3"
+          >
+            {noteSent ? (
+              <p className="rounded-2xl border border-champagne/20 bg-mauve/40 px-4 py-3 text-sm italic text-cream/80">
+                Деня уже читает… ❤️
+                <br />
+                <span className="mt-1 block text-xs text-cream/50">«{note}»</span>
+              </p>
+            ) : (
+              <>
+                <textarea
+                  value={note}
+                  onChange={(e) => setNote(e.target.value)}
+                  placeholder="Напиши что угодно…"
+                  rows={3}
+                  className="w-full resize-none rounded-2xl border border-champagne/20 bg-mauve/40 px-4 py-3 text-sm text-cream placeholder:text-cream/30 focus:border-champagne/50 focus:outline-none"
+                />
+                <button
+                  onClick={sendNote}
+                  className="rounded-full bg-champagne/20 px-5 py-2 text-xs uppercase tracking-widest text-champagne transition hover:bg-champagne/30"
+                >
+                  Отправить
+                </button>
+              </>
+            )}
+          </motion.div>
+        )}
+      </div>
     </div>
   );
 }
