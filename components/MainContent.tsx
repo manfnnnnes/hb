@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import RevealCard from "./RevealCard";
 import PhotoFrame from "./PhotoFrame";
@@ -14,9 +15,24 @@ const fadeUp = {
 };
 
 export default function MainContent() {
+  const [phrase, setPhrase] = useState("");
+
+  useEffect(() => {
+    const phrases = siteContent.hero.randomPhrases;
+    setPhrase(phrases[Math.floor(Math.random() * phrases.length)]);
+  }, []);
+
+  function scrollToLetter() {
+    const el = document.getElementById("letter-section");
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }
+
   return (
     <div className="relative z-10">
       <MusicToggle />
+
       {/* герой */}
       <section className="flex min-h-screen flex-col items-center justify-center px-6 text-center">
         <motion.h1
@@ -27,6 +43,7 @@ export default function MainContent() {
         >
           {siteContent.hero.title}
         </motion.h1>
+
         <motion.p
           initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
@@ -36,11 +53,22 @@ export default function MainContent() {
           {siteContent.hero.subtitle}
         </motion.p>
 
+        {phrase && (
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.7 }}
+            transition={{ delay: 1.1 }}
+            className="mt-8 text-sm italic text-rose/80"
+          >
+            {phrase}
+          </motion.p>
+        )}
+
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 0.6 }}
-          transition={{ duration: 1.2, delay: 1 }}
-          className="mt-16 flex flex-col items-center gap-2 text-cream/50"
+          transition={{ duration: 1.2, delay: 1.4 }}
+          className="mt-14 flex flex-col items-center gap-2 text-cream/50"
         >
           <span className="text-xs uppercase tracking-[0.3em]">Листай вниз</span>
           <motion.div
@@ -52,7 +80,7 @@ export default function MainContent() {
       </section>
 
       {/* письмо */}
-      <section className="mx-auto max-w-2xl px-6 py-24">
+      <section id="letter-section" className="mx-auto max-w-2xl px-6 py-24">
         <motion.div {...fadeUp}>
           <h2 className="mb-8 text-center font-serif text-2xl text-champagnelight sm:text-3xl">
             {siteContent.letter.heading}
@@ -86,7 +114,11 @@ export default function MainContent() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-60px" }}
               transition={{ duration: 0.6, delay: (i % 2) * 0.1, ease: "easeOut" }}
-              className={siteContent.cards.length % 2 !== 0 && i === siteContent.cards.length - 1 ? "sm:col-span-2" : ""}
+              className={
+                siteContent.cards.length % 2 !== 0 && i === siteContent.cards.length - 1
+                  ? "sm:col-span-2"
+                  : ""
+              }
             >
               <RevealCard title={card.title} text={card.text} />
             </motion.div>
@@ -131,6 +163,14 @@ export default function MainContent() {
         >
           {siteContent.final.signature}
         </motion.p>
+
+        <motion.button
+          {...fadeUp}
+          onClick={scrollToLetter}
+          className="mt-8 rounded-full border border-champagne/30 bg-mauve/40 px-6 py-2.5 text-xs uppercase tracking-widest text-champagne transition hover:border-champagne/60 hover:bg-mauve/60"
+        >
+          Ещё раз прочитать письмо
+        </motion.button>
       </section>
     </div>
   );
