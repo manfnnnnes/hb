@@ -42,7 +42,7 @@ export default function PetalCatcher() {
   }, [caught]);
 
   useEffect(() => {
-    const heartChance = caught >= 50 ? 0.38 : 0.18; // после 50 — чаще сердечки
+    const heartChance = caught >= 50 ? 0.38 : 0.18;
 
     function spawn() {
       idRef.current += 1;
@@ -69,7 +69,7 @@ export default function PetalCatcher() {
       clearInterval(interval);
       timeouts.forEach(clearTimeout);
     };
-  }, [caught >= 50]); // перезапускаем при достижении 50
+  }, [caught >= 50]);
 
   function handleCatch(id: number, isHeart: boolean) {
     setPetals((prev) => prev.filter((p) => p.id !== id));
@@ -87,17 +87,16 @@ export default function PetalCatcher() {
         setIsSpicy(false);
       }
 
-      // Специальная фраза на 50
       if (next === 50) {
         setTimeout(() => {
-          setReward("Я тебя хочу");
+          setReward("Я тебя хочу 🔥");
           setIsSpicy(true);
         }, 2900);
       }
 
       if (next % 25 === 0 && next !== 50) {
         setTimeout(() => {
-          setReward(`Уровень ${next / 25}! Ты уже настоящая охотница`);
+          setReward(`Уровень ${next / 25}! Ты уже настоящая охотница ✨`);
           setIsSpicy(false);
         }, 2800);
       }
@@ -111,7 +110,7 @@ export default function PetalCatcher() {
     const t = setTimeout(() => {
       setReward(null);
       setIsSpicy(false);
-    }, 3000);
+    }, 3200);
     return () => clearTimeout(t);
   }, [reward]);
 
@@ -164,17 +163,28 @@ export default function PetalCatcher() {
       <AnimatePresence>
         {reward && (
           <motion.div
-            initial={{ opacity: 0, y: 20, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.3 }}
-            className={`fixed bottom-10 left-1/2 z-30 -translate-x-1/2 max-w-[90vw] whitespace-nowrap rounded-full border px-5 py-2 text-sm italic shadow-soft ${
-              isSpicy
-                ? "border-rose/60 bg-ink/95 text-rose"
-                : "border-champagne/40 bg-ink/90 text-cream"
-            }`}
+            initial={{ opacity: 0, scale: 0.7, y: 30 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.85, y: -20 }}
+            transition={{ type: "spring", stiffness: 300, damping: 22 }}
+            className="pointer-events-none fixed inset-0 z-50 flex items-center justify-center px-4"
           >
-            {reward}
+            <div
+              className={`relative max-w-[90vw] rounded-3xl border px-7 py-4 text-center shadow-2xl backdrop-blur-md ${
+                isSpicy
+                  ? "border-rose/60 bg-ink/90 text-rose"
+                  : "border-champagne/50 bg-ink/90 text-cream"
+              }`}
+            >
+              <div
+                className={`absolute -inset-4 -z-10 rounded-[2rem] blur-2xl ${
+                  isSpicy ? "bg-rose/25" : "bg-champagne/20"
+                }`}
+              />
+              <p className={`text-lg font-medium italic sm:text-xl ${isSpicy ? "text-rose" : "text-cream"}`}>
+                {reward}
+              </p>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
