@@ -24,6 +24,11 @@ export const metadata: Metadata = {
     index: false,
     follow: false,
   },
+  openGraph: {
+    title: "С днём рождения, Настюша",
+    description: "Здесь тебя ждёт кое что личное",
+    type: "website",
+  },
 };
 
 export default function RootLayout({

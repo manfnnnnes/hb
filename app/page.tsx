@@ -14,6 +14,10 @@ const REVEAL_DATE = new Date("2026-11-13T00:00:00");
 // открой сайт со ссылкой вида https://твой-сайт.vercel.app/?preview=true
 const PREVIEW_PARAM = "preview";
 
+// Ключ в localStorage, по которому запоминается что письмо уже открыто,
+// чтобы при повторном заходе не нужно было отвечать на вопросы заново.
+const STORAGE_KEY = "hb_unlocked";
+
 export default function Home() {
   const [unlocked, setUnlocked] = useState(false);
   const [ready, setReady] = useState(false);
@@ -23,8 +27,26 @@ export default function Home() {
     const params = new URLSearchParams(window.location.search);
     const isPreview = params.get(PREVIEW_PARAM) === "true";
     setDateReached(isPreview || new Date() >= REVEAL_DATE);
+
+    try {
+      const remembered = window.localStorage.getItem(STORAGE_KEY) === "true";
+      if (remembered) setUnlocked(true);
+    } catch {
+      // localStorage может быть недоступен в редких случаях
+      // (приватный режим с ограничениями), тогда просто не запоминаем
+    }
+
     setReady(true);
   }, []);
+
+  function handleUnlock() {
+    try {
+      window.localStorage.setItem(STORAGE_KEY, "true");
+    } catch {
+      // если localStorage недоступен, просто продолжаем без запоминания
+    }
+    setUnlocked(true);
+  }
 
   return (
     <main className="relative min-h-screen bg-gradient-to-b from-plum via-mauve to-ink">
@@ -42,7 +64,7 @@ export default function Home() {
       {!ready ? null : !dateReached ? (
         <ComingSoon target={REVEAL_DATE} />
       ) : !unlocked ? (
-        <EnvelopeGate onUnlock={() => setUnlocked(true)} />
+        <EnvelopeGate onUnlock={handleUnlock} />
       ) : (
         <MainContent />
       )}
