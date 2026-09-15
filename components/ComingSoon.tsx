@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { siteContent } from "@/content/site-content";
+import PetalCatcher from "./PetalCatcher";
 
 type TimeLeft = {
   days: number;
@@ -60,7 +61,7 @@ export default function ComingSoon({ target }: { target: Date }) {
     return () => clearTimeout(t);
   }, [lockMessage, lockKey]);
 
-  const totalSpan = target.getTime() - START_DATE.getTime();
+  const totalSpan = Math.max(1, target.getTime() - START_DATE.getTime());
   const elapsed = Date.now() - START_DATE.getTime();
   const progress = Math.min(100, Math.max(0, (elapsed / totalSpan) * 100));
 
@@ -196,7 +197,7 @@ export default function ComingSoon({ target }: { target: Date }) {
         </p>
       </motion.div>
 
-      <div className="h-6">
+      <div className="h-6 mb-8">
         <AnimatePresence mode="wait">
           <motion.p
             key={hintIndex}
@@ -210,6 +211,8 @@ export default function ComingSoon({ target }: { target: Date }) {
           </motion.p>
         </AnimatePresence>
       </div>
+
+      <PetalCatcher />
     </div>
   );
 }

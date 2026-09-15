@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import RevealCard from "./RevealCard";
 import PhotoFrame from "./PhotoFrame";
+import MusicToggle from "./MusicToggle";
 import { siteContent } from "@/content/site-content";
 
 const fadeUp = {
@@ -15,6 +16,7 @@ const fadeUp = {
 export default function MainContent() {
   return (
     <div className="relative z-10">
+      <MusicToggle />
       {/* герой */}
       <section className="flex min-h-screen flex-col items-center justify-center px-6 text-center">
         <motion.h1
