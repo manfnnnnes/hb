@@ -38,6 +38,7 @@ export default function ComingSoon({ target }: { target: Date }) {
   const [showNote, setShowNote] = useState(false);
   const [note, setNote] = useState("");
   const [noteSent, setNoteSent] = useState(false);
+  const [randomHint, setRandomHint] = useState("");
 
   const titleClicks = useRef(0);
   const timerClicks = useRef(0);
@@ -62,6 +63,17 @@ export default function ComingSoon({ target }: { target: Date }) {
         setNoteSent(true);
       }
     } catch {}
+
+    // Случайная фраза при каждом заходе
+    const allHints = [
+      ...siteContent.comingSoon.rotatingHints,
+      ...siteContent.comingSoon.catchRewards.slice(0, 5),
+      "я по тебе соскучился",
+      "ты мне очень нужна",
+      "скоро ты всё узнаешь ❤️",
+      "я уже жду 13 ноября",
+    ];
+    setRandomHint(allHints[Math.floor(Math.random() * allHints.length)]);
   }, []);
 
   function handleLockClick() {
@@ -216,7 +228,7 @@ export default function ComingSoon({ target }: { target: Date }) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.8, delay: 0.75 }}
-        className="mb-10 w-full max-w-xs"
+        className="mb-8 w-full max-w-xs"
       >
         <div className="h-1.5 w-full overflow-hidden rounded-full bg-white/10">
           <motion.div
@@ -230,6 +242,18 @@ export default function ComingSoon({ target }: { target: Date }) {
           {Math.round(progress)}% {siteContent.comingSoon.progressLabel}
         </p>
       </motion.div>
+
+      {/* Случайная фраза при заходе */}
+      {randomHint && (
+        <motion.p
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 0.7, y: 0 }}
+          transition={{ delay: 0.9 }}
+          className="mb-6 max-w-xs text-sm italic text-cream/60"
+        >
+          {randomHint}
+        </motion.p>
+      )}
 
       <div className="h-6 mb-6">
         <AnimatePresence mode="wait">
@@ -254,67 +278,4 @@ export default function ComingSoon({ target }: { target: Date }) {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.85 }}
             transition={{ type: "spring", stiffness: 280, damping: 20 }}
-            className="pointer-events-none fixed inset-0 z-50 flex items-center justify-center px-4"
-          >
-            <div className="relative max-w-[90vw] rounded-3xl border border-rose/60 bg-ink/95 px-8 py-5 text-center shadow-2xl backdrop-blur-md">
-              <div className="absolute -inset-5 -z-10 rounded-[2.2rem] bg-rose/30 blur-3xl" />
-              <p className="text-lg font-medium italic text-rose sm:text-xl">
-                {secretMessage}
-              </p>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      <PetalCatcher />
-
-      {/* Кнопка Написать мне */}
-      <div className="mt-10 w-full max-w-sm">
-        {!showNote ? (
-          <button
-            onClick={() => setShowNote(true)}
-            className="text-xs uppercase tracking-widest text-cream/40 transition hover:text-champagne"
-          >
-            Написать мне
-          </button>
-        ) : (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="flex flex-col gap-3"
-          >
-           {noteSent ? (
-  <div className="rounded-2xl border border-champagne/20 bg-mauve/40 px-4 py-3 text-sm text-cream/80">
-    <p className="italic">
-      Деня пока ещё не научился читать сообщения прямо здесь 😅
-    </p>
-    <p className="mt-2 text-xs text-cream/60">
-      Поэтому напиши ему лично — он будет очень ждать.
-    </p>
-    <p className="mt-3 text-xs italic text-cream/40">
-      Твоё сообщение: «{note}»
-    </p>
-  </div>
-) : (
-              <>
-                <textarea
-                  value={note}
-                  onChange={(e) => setNote(e.target.value)}
-                  placeholder="Напиши что угодно…"
-                  rows={3}
-                  className="w-full resize-none rounded-2xl border border-champagne/20 bg-mauve/40 px-4 py-3 text-sm text-cream placeholder:text-cream/30 focus:border-champagne/50 focus:outline-none"
-                />
-                <button
-                  onClick={sendNote}
-                  className="rounded-full bg-champagne/20 px-5 py-2 text-xs uppercase tracking-widest text-champagne transition hover:bg-champagne/30"
-                >
-                  Отправить
-                </button>
-              </>
-            )}
-          </motion.div>
-        )}
-      </div>
-    </div>
-  );
-}
+            className="pointer-events-none fixed inset-0 z-50 flex 
