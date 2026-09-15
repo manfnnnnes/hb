@@ -250,12 +250,18 @@ export default function ComingSoon({ target }: { target: Date }) {
       <AnimatePresence>
         {secretMessage && (
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
+            initial={{ opacity: 0, scale: 0.7 }}
             animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0 }}
-            className="mb-6 rounded-full border border-rose/50 bg-ink/95 px-6 py-2.5 text-sm italic text-rose shadow-soft"
+            exit={{ opacity: 0, scale: 0.85 }}
+            transition={{ type: "spring", stiffness: 280, damping: 20 }}
+            className="pointer-events-none fixed inset-0 z-50 flex items-center justify-center px-4"
           >
-            {secretMessage}
+            <div className="relative max-w-[90vw] rounded-3xl border border-rose/60 bg-ink/95 px-8 py-5 text-center shadow-2xl backdrop-blur-md">
+              <div className="absolute -inset-5 -z-10 rounded-[2.2rem] bg-rose/30 blur-3xl" />
+              <p className="text-lg font-medium italic text-rose sm:text-xl">
+                {secretMessage}
+              </p>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
