@@ -7,14 +7,14 @@ html {
 }
 
 body {
-  background-color: #2e1f28;
-  color: #f8f0e8;
+  background-color: #241620;
+  color: #f6ece3;
   overflow-x: hidden;
 }
 
 ::selection {
-  background-color: #dbb48a;
-  color: #26181f;
+  background-color: #d7ae82;
+  color: #241620;
 }
 
 /* тонкий скроллбар в тон сайта */
@@ -22,19 +22,19 @@ body {
   width: 10px;
 }
 ::-webkit-scrollbar-track {
-  background: #2e1f28;
+  background: #241620;
 }
 ::-webkit-scrollbar-thumb {
   background-color: #6b4a58;
   border-radius: 999px;
-  border: 2px solid #2e1f28;
+  border: 2px solid #241620;
 }
 
 /* видимый фокус для доступности с клавиатуры */
 a:focus-visible,
 button:focus-visible,
 input:focus-visible {
-  outline: 2px solid #dbb48a;
+  outline: 2px solid #d7ae82;
   outline-offset: 3px;
   border-radius: 4px;
 }
